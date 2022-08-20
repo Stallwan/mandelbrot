@@ -1,22 +1,18 @@
 import numpy as np
-from PIL import Image
+import matplotlib.pyplot as plt
 
 
-x1 = -2.1
-x2 = 0.6
-y1 = -1.2
-y2 = 1.2
+def create_complex_matrix(x1, x2, y1, y2, quality):
+    x = np.linspace(x1, x2, int((x2 - x1) * quality))
+    y = np.linspace(y1, y2, int((y2 - y1) * quality))
+    return x[np.newaxis, :] + y[:, np.newaxis] * 1j
 
-img = np.zeros((x1 - x2, y1 - y2, 3))
+def is_stable(c, i):
+    z = c
+    for _ in range(i): z = z ** 2 + c
+    return abs(z) <= 2
 
-def mandelbrot(x, y):
-    c = complex(x, y)
-    z = 0
+plan = create_complex_matrix(-2, 0.5, -1.5, 1.5, quality=1000)
 
-    for i in range(50):
-        z = z**2 + c
-        print(abs(z))
-
-        if abs(z) >= 2:
-            break
-        # display pixel via x,y ...
+plt.imshow(is_stable(plan, i=30), cmap="binary")
+plt.show()
